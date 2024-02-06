@@ -303,8 +303,6 @@ namespace MusicSorter
         {
             if (_dropEnabled)
             {
-
-
                 string[] droppedFilenames = e.Data.GetData(System.Windows.DataFormats.FileDrop, true) as string[];
                 Console.WriteLine("FileDrop => " + droppedFilenames[0]);
                 _settings.Path = droppedFilenames[0];
@@ -319,23 +317,27 @@ namespace MusicSorter
 
         private void BorderDropZone_DragEnter(object sender, System.Windows.DragEventArgs e)
         {
-            if (BorderDropZone.Opacity == 0)
-            {
-                BorderDropZone.Opacity = 0.999;
-            }
+
 
             _dropEnabled = true;
             if (e.Data.GetDataPresent(System.Windows.DataFormats.FileDrop))
             {
+
+
                 var path = ((string[])e.Data.GetData(System.Windows.DataFormats.FileDrop))[0];
                 if (!Directory.Exists(path))
                 {
+
                     _dropEnabled = false;
                     BorderDropZone.BorderThickness = new Thickness(0);
                     BorderDropZone.BorderBrush = Brushes.AliceBlue;
                 }
                 else
                 {
+                    if (BorderDropZone.Opacity == 0)
+                    {
+                        BorderDropZone.Opacity = 0.999;
+                    }
                     BorderDropZone.BorderThickness = new Thickness(4);
                     BorderDropZone.BorderBrush = Brushes.SkyBlue;
                 }
