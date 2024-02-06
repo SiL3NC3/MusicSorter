@@ -5,8 +5,79 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MusicSorter"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="Music Sorter" Height="250" Width="300" WindowStartupLocation="CenterScreen" Topmost="True" ResizeMode="CanMinimize">
+    <Window.Resources>
+
+    </Window.Resources>
     <Grid>
-        
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!--SORTING-MODE-->
+        <GroupBox Grid.Row="0" Header="Sorting Mode" Margin="8 8 8 4">
+            <UniformGrid Columns="3">
+                <Button x:Name="ButtonAscending" Grid.Column="3" Click="ButtonAscending_Click" ToolTip="Ascending order" Width="70" Height="70" Background="White" >
+                    <StackPanel Orientation="Horizontal">
+                        <Path Width="45" Height="45"  
+                                  Stroke="{Binding Foreground, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Button}}}" 
+                                  Fill="{Binding Foreground, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Button}}}" 
+                                  Stretch="Fill" Data="{StaticResource icon_ascending}" StrokeThickness="0.5" Margin="8"/>
+                    </StackPanel>
+                </Button>
+                <Button x:Name="ButtonDescending" Grid.Column="3" PreviewMouseDown="ButtonDescending_Click" ToolTip="Descending Order" Width="70" Height="70" Background="Transparent">
+                    <StackPanel Orientation="Horizontal">
+                        <Path Width="45" Height="45"  
+                                  Stroke="{Binding Foreground, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Button}}}" 
+                                  Fill="{Binding Foreground, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Button}}}" 
+                                  Stretch="Fill" Data="{StaticResource icon_descending}" StrokeThickness="0.5" Margin="8"/>
+                    </StackPanel>
+                </Button>
+                <Button x:Name="ButtonRandom" Grid.Column="3" Click="ButtonRandom_Click" ToolTip="Random order" Width="70" Height="70" Background="Transparent">
+                    <StackPanel Orientation="Horizontal">
+                        <Path Width="45" Height="45" 
+                                  Stroke="{Binding Foreground, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Button}}}" 
+                                  Fill="{Binding Foreground, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Button}}}" 
+                                  Stretch="Fill" Data="{StaticResource icon_random}" StrokeThickness="0.5" Margin="8"/>
+                    </StackPanel>
+                </Button>
+            </UniformGrid>
+        </GroupBox>
+
+        <!--FOLDER SELECTION-->
+        <GroupBox Grid.Row="1" Style="{StaticResource GroupBoxStyleWithInfo}" Margin="8 4">
+            <GroupBox.Header>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock VerticalAlignment="Center" Background="white" Padding="3" Margin="-2 0 0 0">Folder</TextBlock>
+                    <Button x:Name="ButtonSelect" Grid.Column="3" Click="ButtonSelect_Click" Margin="2 4" Padding="4 1">Select</Button>
+                </Grid>
+
+            </GroupBox.Header>
+            <TextBlock Text="..."/>
+        </GroupBox>
+
+        <!--ACTION BUTTONS-->
+        <Grid Grid.Row="2" Margin="8">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <Label x:Name="LabelFocus" HorizontalAlignment="Left"></Label>
+            <Button x:Name="ButtonStart"  Click="ButtonStart_Click" Padding="4 2" HorizontalAlignment="Center">START PROCESSING</Button>
+            <Button x:Name="ButtonInfo" Grid.Column="1" Click="ButtonInfo_Click" Padding="4 2" HorizontalAlignment="Right" >INFO</Button>
+        </Grid>
+
+        <!--PROGRESSBAR-->
+        <ProgressBar Grid.Row="3" Height="8" Value="29" Margin="0" Padding="0">
+
+        </ProgressBar>
     </Grid>
 </Window>
