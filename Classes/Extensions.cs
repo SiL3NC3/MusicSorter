@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -8,6 +9,22 @@ using System.Windows.Forms;
 
 namespace MusicSorter.Classes
 {
+    public static class ISynchronizeInvokeExtensions
+    {
+        public static void InvokeEx2<T>(this T @this, Action<T> action) where T : ISynchronizeInvoke
+        {
+            // USAGE: this.InvokeEx2(f => f.listView1.Items.Clear());
+
+            if (@this.InvokeRequired)
+            {
+                @this.Invoke(action, new object[] { @this });
+            }
+            else
+            {
+                action(@this);
+            }
+        }
+    }
     public static class ControlExtensions
     {
         public static TResult InvokeEx<TControl, TResult>(this TControl control,

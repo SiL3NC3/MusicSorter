@@ -10,12 +10,16 @@ namespace MusicSorter.Classes
     public class Settings
     {
         private const string Filename = @"settings.xml";
+        public SortingOrder SortingOrder { get; set; }
+
         public string Path { get; set; }
         public bool Subfolders { get; set; }
-        public SortingOrder SortingOrder { get; set; }
         public bool Simulate { get; set; }
 
-        public Settings() { }
+        public Settings()
+        {
+            Subfolders = true;
+        }
 
         internal void Load()
         {

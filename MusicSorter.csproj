@@ -96,6 +96,7 @@
     <Compile Include="Classes\Settings.cs" />
     <Compile Include="Classes\Structure.cs" />
     <Compile Include="Classes\StructureResult.cs" />
+    <Compile Include="Controls\MessageBoxEx.cs" />
     <Compile Include="Helper\ArrayHelper.cs" />
     <Compile Include="Helper\CultureHelper.cs" />
     <Compile Include="Helper\FileSystemHelper.cs" />
@@ -133,6 +134,7 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <None Include="app.manifest" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -152,9 +154,7 @@
     <Resource Include="Resources\sort-descending-icon-original.png" />
     <Resource Include="Resources\sort-descending-icon-original.svg" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Controls\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="packages\Fody.4.0.2\build\Fody.targets" Condition="Exists('packages\Fody.4.0.2\build\Fody.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

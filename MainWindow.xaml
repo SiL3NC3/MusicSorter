@@ -5,14 +5,14 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MusicSorter"
         mc:Ignorable="d"
-        Title="Music Sorter" Height="250" Width="300" WindowStartupLocation="CenterScreen" Topmost="True" ResizeMode="CanMinimize">
+        Title="Music Sorter" Width="333" WindowStartupLocation="CenterScreen" Topmost="True" ResizeMode="CanMinimize" SizeToContent="Height" FontSize="12">
     <Window.Resources>
 
     </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
-            <RowDefinition/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
@@ -57,12 +57,45 @@
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
-                    <TextBlock VerticalAlignment="Center" Background="white" Padding="3" Margin="-2 0 0 0">Folder</TextBlock>
+                    <TextBlock VerticalAlignment="Center" Background="white" Padding="3" Margin="-2 0 0 0">Information</TextBlock>
                     <Button x:Name="ButtonSelect" Grid.Column="3" Click="ButtonSelect_Click" Margin="2 4" Padding="4 1">Select</Button>
                 </Grid>
-
             </GroupBox.Header>
-            <TextBlock Text="..."/>
+            <Grid Height="100">
+                <Grid x:Name="GridInformation" Visibility="Collapsed" IsHitTestVisible="True"
+                      DragEnter="BorderDropZone_DragEnter" DragLeave="BorderDropZone_DragLeave" AllowDrop="True" Drop="BorderDropZone_Drop" >
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
+                    <StackPanel Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="3" Orientation="Horizontal" HorizontalAlignment="Center" Margin="2" IsHitTestVisible="False">
+                        <Label HorizontalAlignment="Right" VerticalAlignment="Bottom" FontWeight="Bold" Padding="0" Margin="2" IsHitTestVisible="False">Folder:</Label>
+                        <Label x:Name="labelPath" VerticalAlignment="Center" Padding="0" HorizontalAlignment="left" Margin="2" IsHitTestVisible="False">...</Label>
+                    </StackPanel>
+
+                    <Label Grid.Column="0" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Bottom" FontWeight="Bold" Padding="0"  IsHitTestVisible="False">Folders:</Label>
+                    <Label Grid.Column="1" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Bottom" FontWeight="Bold" Padding="0" IsHitTestVisible="False">Files:</Label>
+                    <Label Grid.Column="2" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Bottom" FontWeight="Bold" Padding="0"   IsHitTestVisible="False">Hidden Files:</Label>
+
+                    <Label Grid.Column="0" Grid.Row="2" Padding="0" x:Name="LabelDetailsFolderCount" HorizontalAlignment="Center" VerticalAlignment="Top" IsHitTestVisible="False">0</Label>
+                    <Label Grid.Column="1" Grid.Row="2" Padding="0" x:Name="LabelDetailsFilesCount" HorizontalAlignment="Center" VerticalAlignment="Top" IsHitTestVisible="False">0</Label>
+                    <Label Grid.Column="2" Grid.Row="2" Padding="0" x:Name="LabelDetailsFilesHiddenCount" HorizontalAlignment="Center" VerticalAlignment="Top" IsHitTestVisible="False">0</Label>
+
+                    <Label Grid.Column="0" Grid.Row="3" Grid.ColumnSpan="3" x:Name="LabelStatus" Padding="0" HorizontalAlignment="Center" Margin="4" IsHitTestVisible="False">Status-Messages...</Label>
+                </Grid>
+                <Border x:Name="BorderDropZone" DragEnter="BorderDropZone_DragEnter" DragLeave="BorderDropZone_DragLeave" AllowDrop="True" Drop="BorderDropZone_Drop" 
+                        Background="AliceBlue"  Visibility="Visible" Margin="0">
+                    <Label Name="lb" VerticalAlignment="Center" HorizontalAlignment="Center" IsHitTestVisible="False" >Select a folder or drop it here</Label>
+                </Border>
+            </Grid>
         </GroupBox>
 
         <!--ACTION BUTTONS-->
@@ -71,12 +104,13 @@
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
             <Label x:Name="LabelFocus" HorizontalAlignment="Left"></Label>
-            <Button x:Name="ButtonStart"  Click="ButtonStart_Click" Padding="4 2" HorizontalAlignment="Center">START PROCESSING</Button>
-            <Button x:Name="ButtonInfo" Grid.Column="1" Click="ButtonInfo_Click" Padding="4 2" HorizontalAlignment="Right" >INFO</Button>
+            <Button x:Name="ButtonInfo" Grid.Column="1" Click="ButtonInfo_Click" Padding="4 2" HorizontalAlignment="Left" VerticalAlignment="Center" >INFO</Button>
+            <Button x:Name="ButtonStart"  Click="ButtonStart_Click" Padding="8 4" FontSize="16" HorizontalAlignment="Center">START PROCESSING</Button>
+            <Button x:Name="ButtonReset" Grid.Column="1" Click="ButtonReset_Click" Padding="4 2" HorizontalAlignment="Right" VerticalAlignment="Center" >Reset</Button>
         </Grid>
 
         <!--PROGRESSBAR-->
-        <ProgressBar Grid.Row="3" Height="8" Value="29" Margin="0" Padding="0">
+        <ProgressBar x:Name="ProgressBarStatus" Grid.Row="3" Height="8" Value="29" Margin="0" Padding="0">
 
         </ProgressBar>
     </Grid>
