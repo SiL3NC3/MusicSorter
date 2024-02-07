@@ -62,7 +62,7 @@ namespace MusicSorter.Classes
                 // Special case as value can't be set greater than Maximum.
                 pb.Maximum = value + 1;     // Temporarily Increase Maximum
                 pb.Value = value + 1;       // Move past
-                pb.Maximum = value;         // Reset maximum
+                pb.Maximum = value;         // ResetPath maximum
             }
             else
             {

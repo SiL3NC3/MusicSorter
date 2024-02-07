@@ -16,12 +16,13 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
         <!--SORTING-MODE-->
-        <GroupBox Grid.Row="0" Header="Sorting Mode" Margin="8 8 8 4">
+        <GroupBox x:Name="GroupBoxSorting" Grid.Row="0" Header="Sorting Mode" Margin="8 8 8 4">
             <UniformGrid Columns="3">
-                <Button x:Name="ButtonAscending" Grid.Column="3" Click="ButtonAscending_Click" ToolTip="Ascending order" Width="70" Height="70" Background="White" >
+                <Button x:Name="ButtonAscending" Grid.Column="3" Click="ButtonAscending_Click" ToolTip="Ascending Order" Width="70" Height="70" Background="White" >
                     <StackPanel Orientation="Horizontal">
                         <Path Width="45" Height="45"  
                                   Stroke="{Binding Foreground, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Button}}}" 
@@ -37,7 +38,7 @@
                                   Stretch="Fill" Data="{StaticResource icon_descending}" StrokeThickness="0.5" Margin="8"/>
                     </StackPanel>
                 </Button>
-                <Button x:Name="ButtonRandom" Grid.Column="3" Click="ButtonRandom_Click" ToolTip="Random order" Width="70" Height="70" Background="Transparent">
+                <Button x:Name="ButtonRandom" Grid.Column="3" Click="ButtonRandom_Click" ToolTip="Random Order" Width="70" Height="70" Background="Transparent">
                     <StackPanel Orientation="Horizontal">
                         <Path Width="45" Height="45" 
                                   Stroke="{Binding Foreground, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Button}}}" 
@@ -48,8 +49,17 @@
             </UniformGrid>
         </GroupBox>
 
-        <!--FOLDER SELECTION-->
-        <GroupBox Grid.Row="1" Style="{StaticResource GroupBoxStyleWithInfo}" Margin="8 4">
+        <!--OPTIONS-->
+        <GroupBox x:Name="GroupBoxOptions" Grid.Row="1" Header="Options" Margin="4">
+            <UniformGrid VerticalAlignment="Center" Columns="3" Margin="4">
+                <CheckBox x:Name="CheckBoxOptionSubfolders" HorizontalAlignment="Center" Click="CheckBoxOptionSubfolders_Click">Subfolders</CheckBox>
+                <CheckBox x:Name="CheckBoxOptionSortFolders" HorizontalAlignment="Center" Click="CheckBoxOptionSortFolders_Click">Sort folders</CheckBox>
+                <CheckBox x:Name="CheckBoxOptionSimulate" HorizontalAlignment="Center" Click="CheckBoxOptionSimulate_Click">Simulate</CheckBox>
+            </UniformGrid>
+        </GroupBox>
+
+        <!--INFORMATION / Folder Selection-->
+        <GroupBox x:Name="GroupBoxInformation" Grid.Row="2" Style="{StaticResource GroupBoxStyleWithInfo}" Margin="4">
             <GroupBox.Header>
                 <Grid>
                     <Grid.ColumnDefinitions>
@@ -61,8 +71,8 @@
                     <Button x:Name="ButtonSelect" Grid.Column="3" Click="ButtonSelect_Click" Margin="2 4" Padding="4 1">Select</Button>
                 </Grid>
             </GroupBox.Header>
-            <Grid Height="100">
-                <Grid x:Name="GridInformation" Visibility="Collapsed" IsHitTestVisible="True"
+            <Grid Height="70">
+                <Grid x:Name="GridInformation" Visibility="Visible" IsHitTestVisible="True"
                       DragEnter="BorderDropZone_DragEnter" DragLeave="BorderDropZone_DragLeave" AllowDrop="True" Drop="BorderDropZone_Drop" >
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
@@ -73,12 +83,11 @@
                         <RowDefinition Height="*"/>
                         <RowDefinition Height="*"/>
                         <RowDefinition Height="*"/>
-                        <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
 
-                    <StackPanel Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="3" Orientation="Horizontal" HorizontalAlignment="Center" Margin="2" IsHitTestVisible="False">
-                        <Label HorizontalAlignment="Right" VerticalAlignment="Bottom" FontWeight="Bold" Padding="0" Margin="2" IsHitTestVisible="False">Folder:</Label>
-                        <Label x:Name="labelPath" VerticalAlignment="Center" Padding="0" HorizontalAlignment="left" Margin="2" IsHitTestVisible="False">...</Label>
+                    <StackPanel Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="3" Orientation="Horizontal" HorizontalAlignment="Left" Margin="2" IsHitTestVisible="False">
+                        <Label HorizontalAlignment="Right" VerticalAlignment="Center" FontWeight="Bold" Padding="0" Margin="2" IsHitTestVisible="False">Path:</Label>
+                        <TextBlock x:Name="LabelPath" VerticalAlignment="Center" Padding="0" HorizontalAlignment="left" Margin="2" IsHitTestVisible="False" TextWrapping="Wrap" >...</TextBlock>
                     </StackPanel>
 
                     <Label Grid.Column="0" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Bottom" FontWeight="Bold" Padding="0"  IsHitTestVisible="False">Folders:</Label>
@@ -89,17 +98,22 @@
                     <Label Grid.Column="1" Grid.Row="2" Padding="0" x:Name="LabelDetailsFilesCount" HorizontalAlignment="Center" VerticalAlignment="Top" IsHitTestVisible="False">0</Label>
                     <Label Grid.Column="2" Grid.Row="2" Padding="0" x:Name="LabelDetailsFilesHiddenCount" HorizontalAlignment="Center" VerticalAlignment="Top" IsHitTestVisible="False">0</Label>
 
-                    <Label Grid.Column="0" Grid.Row="3" Grid.ColumnSpan="3" x:Name="LabelStatus" Padding="0" HorizontalAlignment="Center" Margin="4" IsHitTestVisible="False">Status-Messages...</Label>
                 </Grid>
                 <Border x:Name="BorderDropZone" DragEnter="BorderDropZone_DragEnter" DragLeave="BorderDropZone_DragLeave" AllowDrop="True" Drop="BorderDropZone_Drop" 
-                        Background="AliceBlue"  Visibility="Visible" Margin="0">
+                        Background="AliceBlue"  Visibility="Collapsed" Margin="0">
                     <Label Name="lb" VerticalAlignment="Center" HorizontalAlignment="Center" IsHitTestVisible="False" >Select a folder or drop it here</Label>
                 </Border>
             </Grid>
         </GroupBox>
 
+        <!--STATUS-->
+        <GroupBox x:Name="GroupBoxStatus" Grid.Row="3" Header="Status" Margin="4">
+            <Label x:Name="LabelStatus" Padding="0" HorizontalAlignment="Center" Margin="4" IsHitTestVisible="False">
+                ...</Label>
+        </GroupBox>
+
         <!--ACTION BUTTONS-->
-        <Grid Grid.Row="2" Margin="8">
+        <Grid x:Name="GridActions" Grid.Row="4" Margin="8">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
@@ -110,7 +124,7 @@
         </Grid>
 
         <!--PROGRESSBAR-->
-        <ProgressBar x:Name="ProgressBarStatus" Grid.Row="3" Height="8" Value="29" Margin="0" Padding="0">
+        <ProgressBar x:Name="ProgressBarStatus" Grid.Row="5" Height="8" Value="29" Margin="0" Padding="0">
 
         </ProgressBar>
     </Grid>

@@ -65,7 +65,6 @@ namespace MusicSorter.Classes
                             break;
                     }
 
-
                     foreach (var dir in folders)
                     {
                         if (!dir.Attributes.HasFlag(FileAttributes.Hidden))

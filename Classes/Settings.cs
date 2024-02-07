@@ -1,9 +1,11 @@
-﻿using System;
+﻿using MusicSorter.Properties;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Serialization;
 
 namespace MusicSorter.Classes
 {
@@ -12,13 +14,16 @@ namespace MusicSorter.Classes
         private const string Filename = @"settings.xml";
         public SortingOrder SortingOrder { get; set; }
 
+        [XmlIgnore]
         public string Path { get; set; }
         public bool Subfolders { get; set; }
+        public bool SortFolders { get; set; }
         public bool Simulate { get; set; }
 
         public Settings()
         {
             Subfolders = true;
+            SortFolders = true;
         }
 
         internal void Load()
@@ -29,6 +34,7 @@ namespace MusicSorter.Classes
                 this.Path = settings.Path;
                 this.SortingOrder = settings.SortingOrder;
                 this.Subfolders = settings.Subfolders;
+                this.SortFolders = settings.SortFolders;
                 this.Simulate = settings.Simulate;
             }
             else
@@ -40,6 +46,11 @@ namespace MusicSorter.Classes
         internal void Save()
         {
             XMLSerializer.Serialize(this, Filename);
+        }
+
+        internal void ResetPath()
+        {
+            this.Path = null;
         }
     }
 }
