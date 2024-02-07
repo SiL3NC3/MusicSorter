@@ -4,6 +4,8 @@ using MusicSorter.Classes;
 using MusicSorter.Helper;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -37,8 +39,8 @@ namespace MusicSorter
         private static readonly Random _random = new Random();
         private Settings _settings;
         private Structure _structure;
-        private States _state;
         private bool _dropEnabled = true;
+        private bool _processing = false;
 
         public MainWindow()
         {
@@ -48,28 +50,32 @@ namespace MusicSorter
 
             _settings = new Settings();
             _settings.Load();
+
+            // Register ProgressChanged Event from Structure class
+            _structure = new Structure();
+            _structure.ProgressChanged += new EventHandler<ProcessingEventArgs>(Structure_ProgressChanged);
+
             SetState(States.Init);
         }
-
 
         private void SetSortOrder(SortingOrder order, bool save = false)
         {
             switch (order)
             {
                 case Classes.SortingOrder.Ascending:
-                    ButtonAscending.Background = Brushes.SkyBlue;
-                    ButtonDescending.Background = Brushes.Transparent;
-                    ButtonRandom.Background = Brushes.Transparent;
+                    ButtonAscending.Background = System.Windows.Media.Brushes.SkyBlue;
+                    ButtonDescending.Background = System.Windows.Media.Brushes.Transparent;
+                    ButtonRandom.Background = System.Windows.Media.Brushes.Transparent;
                     break;
                 case Classes.SortingOrder.Descending:
-                    ButtonAscending.Background = Brushes.Transparent;
-                    ButtonDescending.Background = Brushes.SkyBlue;
-                    ButtonRandom.Background = Brushes.Transparent;
+                    ButtonAscending.Background = System.Windows.Media.Brushes.Transparent;
+                    ButtonDescending.Background = System.Windows.Media.Brushes.SkyBlue;
+                    ButtonRandom.Background = System.Windows.Media.Brushes.Transparent;
                     break;
                 case Classes.SortingOrder.Random:
-                    ButtonAscending.Background = Brushes.Transparent;
-                    ButtonDescending.Background = Brushes.Transparent;
-                    ButtonRandom.Background = Brushes.SkyBlue;
+                    ButtonAscending.Background = System.Windows.Media.Brushes.Transparent;
+                    ButtonDescending.Background = System.Windows.Media.Brushes.Transparent;
+                    ButtonRandom.Background = System.Windows.Media.Brushes.SkyBlue;
                     break;
             }
             if (save)
@@ -78,13 +84,13 @@ namespace MusicSorter
                 _settings.Save();
             }
         }
-        private void SetOptions(bool readFolder = false)
+        private void SetOptions(bool readFolder)
         {
             CheckBoxOptionSubfolders.IsChecked = _settings.Subfolders;
             CheckBoxOptionSortFolders.IsChecked = _settings.SortFolders;
             CheckBoxOptionSimulate.IsChecked = _settings.Simulate;
 
-            if (!String.IsNullOrEmpty(_settings.Path) || readFolder)
+            if (readFolder && _settings.Path != null)
             {
                 ReadFolder();
             }
@@ -94,14 +100,15 @@ namespace MusicSorter
         {
             Console.WriteLine($"SetState({state})");
 
-            switch (_state = state)
+            switch (state)
             {
                 case States.Init:
                     _settings.ResetPath();
+                    _structure.Clear();
 
                     SetStatus();
                     SetSortOrder(_settings.SortingOrder);
-                    SetOptions();
+                    SetOptions(false);
 
                     ProgressBarStatus.Value = 0;
                     ProgressBarStatus.Maximum = 100;
@@ -117,6 +124,7 @@ namespace MusicSorter
 #endif
                     GroupBoxSorting.IsEnabled = true;
                     GroupBoxInformation.IsEnabled = true;
+                    GroupBoxOptions.IsEnabled = true;
 
                     CheckBoxOptionSubfolders.IsEnabled = true;
                     CheckBoxOptionSortFolders.IsEnabled = true;
@@ -126,7 +134,8 @@ namespace MusicSorter
                     BorderDropZone.Opacity = 0;
                     GridInformation.Visibility = Visibility.Visible;
                     ButtonSelect.IsEnabled = false;
-                    ReadFolder();
+                    if (_settings.Path != null)
+                        ReadFolder();
                     break;
                 case States.Reading:
                     ButtonStart.IsEnabled = false;
@@ -136,11 +145,19 @@ namespace MusicSorter
                     CheckBoxOptionSimulate.IsEnabled = false;
                     break;
                 case States.Idle:
-                    SetStatus();
+                    if (_structure != null && _structure.Files.Count == 0)
+                    {
+                        SetStatus("No files found!");
+                    }
+                    else
+                    {
+                        SetStatus();
+                    }
                     ButtonSelect.IsEnabled = true;
                     CheckBoxOptionSubfolders.IsEnabled = true;
                     CheckBoxOptionSortFolders.IsEnabled = true;
                     CheckBoxOptionSimulate.IsEnabled = true;
+                    GroupBoxOptions.IsEnabled = true;
                     break;
                 case States.Processing:
                     ButtonStart.IsEnabled = false;
@@ -178,16 +195,6 @@ namespace MusicSorter
         }
         private async void ReadFolder()
         {
-            Console.WriteLine("Read folder...");
-            SetStatus("Reading folder... Please wait.", true);
-
-            SetState(States.Reading);
-
-            LabelPath.Text = "...";
-            LabelDetailsFilesCount.Content = "...";
-            LabelDetailsFilesHiddenCount.Content = "...";
-            LabelDetailsFolderCount.Content = "...";
-
             try
             {
                 if (!Directory.Exists(_settings.Path))
@@ -195,8 +202,17 @@ namespace MusicSorter
                     throw new DirectoryNotFoundException(_settings.Path);
                 }
 
-                _structure = new Structure(_settings);
-                await _structure.Load();
+                Console.WriteLine("Read folder...");
+                SetStatus("Reading folder... Please wait.", true);
+
+                _processing = true;
+
+                SetState(States.Reading);
+
+                LabelDetailsFilesCount.Content = ".";
+                LabelDetailsFolderCount.Content = ".";
+
+                await _structure.Load(_settings);
 
                 //var drive = FileSystemHelper.GetDrive(_structure.GetBasePath());
                 LabelPath.Text = _settings.Path;
@@ -213,11 +229,11 @@ namespace MusicSorter
                 LabelDetailsFilesCount.Content = _structure.Files.Count.ToString();
                 ProgressBarStatus.Maximum = _structure.Folders.Count;
 
-
                 if (_structure.Files.Count > 0)
                 {
                     ButtonStart.IsEnabled = true;
                 }
+
             }
             catch (DirectoryNotFoundException ex)
             {
@@ -230,22 +246,36 @@ namespace MusicSorter
             }
             finally
             {
-                if (_structure == null || _structure.Files.Count > 0)
-                {
-                    SetState(States.Idle);
-                }
-                else
-                {
-                    SetStatus("No files. Check Extensions!");
-                }
+                _processing = false;
+                SetState(States.Idle);
                 SetFocus();
             }
         }
-        private void StartProcessing()
+        private async void StartProcessing()
         {
+            _processing = true;
             Console.WriteLine("Start processing...");
             SetState(States.Processing);
             SetStatus("Processing...", true);
+
+            ProgressBarStatus.Maximum = _structure.Files.Count();
+
+            var result = await _structure.Process();
+
+            this.UpdateLayout();
+
+            SetStatus("Processing finished.", true);
+
+            if (result.HasErrors)
+            {
+
+            }
+            else
+            {
+                ShowMessage($"Successfully finished.{nl}Njoy your proper sorted music. ;)", MessageBoxIcon.Information, "Done!");
+            }
+            SetState(States.Init);
+            _processing = false;
         }
 
 
@@ -348,14 +378,21 @@ namespace MusicSorter
             var option = CheckBoxOptionSubfolders.IsChecked.HasValue ? CheckBoxOptionSubfolders.IsChecked : false;
             _settings.Subfolders = option.Value;
             _settings.Save();
-            SetOptions();
+            SetOptions(true);
         }
         private void CheckBoxOptionSortFolders_Click(object sender, RoutedEventArgs e)
         {
             var option = CheckBoxOptionSortFolders.IsChecked.HasValue ? CheckBoxOptionSortFolders.IsChecked : false;
             _settings.SortFolders = option.Value;
             _settings.Save();
-            SetOptions();
+            SetOptions(false);
+        }
+        private void CheckBoxOptionSimulate_Click(object sender, RoutedEventArgs e)
+        {
+            var option = CheckBoxOptionSimulate.IsChecked.HasValue ? CheckBoxOptionSimulate.IsChecked : false;
+            _settings.Simulate = option.Value;
+            _settings.Save();
+            SetOptions(false);
         }
         #endregion
 
@@ -369,7 +406,7 @@ namespace MusicSorter
                 _settings.Path = droppedFilenames[0];
 
                 BorderDropZone.BorderThickness = new Thickness(0);
-                BorderDropZone.BorderBrush = Brushes.AliceBlue;
+                BorderDropZone.BorderBrush = System.Windows.Media.Brushes.AliceBlue;
 
                 SetState(States.Select);
             }
@@ -389,7 +426,7 @@ namespace MusicSorter
 
                     _dropEnabled = false;
                     BorderDropZone.BorderThickness = new Thickness(0);
-                    BorderDropZone.BorderBrush = Brushes.AliceBlue;
+                    BorderDropZone.BorderBrush = System.Windows.Media.Brushes.AliceBlue;
                 }
                 else
                 {
@@ -398,14 +435,14 @@ namespace MusicSorter
                         BorderDropZone.Opacity = 0.999;
                     }
                     BorderDropZone.BorderThickness = new Thickness(4);
-                    BorderDropZone.BorderBrush = Brushes.SkyBlue;
+                    BorderDropZone.BorderBrush = System.Windows.Media.Brushes.SkyBlue;
                 }
             }
             else
             {
                 _dropEnabled = false;
                 BorderDropZone.BorderThickness = new Thickness(0);
-                BorderDropZone.BorderBrush = Brushes.AliceBlue;
+                BorderDropZone.BorderBrush = System.Windows.Media.Brushes.AliceBlue;
             }
 
             if (!_dropEnabled)
@@ -423,7 +460,7 @@ namespace MusicSorter
         private void BorderDropZone_DragLeave(object sender, System.Windows.DragEventArgs e)
         {
             BorderDropZone.BorderThickness = new Thickness(0);
-            BorderDropZone.BorderBrush = Brushes.AliceBlue;
+            BorderDropZone.BorderBrush = System.Windows.Media.Brushes.AliceBlue;
 
             if (BorderDropZone.Opacity == 0.999)
             {
@@ -433,12 +470,40 @@ namespace MusicSorter
 
         #endregion
 
-        private void CheckBoxOptionSimulate_Click(object sender, RoutedEventArgs e)
+        private void Structure_ProgressChanged(object sender, ProcessingEventArgs e)
         {
-            var option = CheckBoxOptionSimulate.IsChecked.HasValue ? CheckBoxOptionSimulate.IsChecked : false;
-            _settings.Simulate = option.Value;
-            _settings.Save();
-            SetOptions();
+            this.Dispatcher.Invoke(() => { ProgressBarStatus.Value = e.Progress; });
+            this.Dispatcher.Invoke(() => { SetStatus(e.Message, true); });
+        }
+
+        ~MainWindow()
+        {
+            _structure.ProgressChanged -= Structure_ProgressChanged;
+            _structure = null;
+            _settings = null;
+        }
+
+        private void Window_Closing(object sender, CancelEventArgs e)
+        {
+            if (_processing)
+            {
+                if (MessageBoxEx.Show(this,
+                         $"Application is still processing!{nl}{nl}" +
+                         $"Please wait for the application to finish the work, otherwise the folder structure can be damaged!{nl}{nl}" +
+                         $"Do you really want to quit?",
+                         "WARNING!",
+                         MessageBoxButtons.YesNo, MessageBoxIcon.Warning
+                     ) == System.Windows.Forms.DialogResult.Yes)
+                {
+                    e.Cancel = false;
+                    return;
+                }
+                else
+                {
+                    e.Cancel = true;
+                    return;
+                }
+            }
         }
     }
 }

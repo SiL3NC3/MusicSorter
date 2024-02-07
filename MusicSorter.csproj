@@ -92,6 +92,7 @@
     <Compile Include="Classes\Enumerations.cs" />
     <Compile Include="Classes\Error.cs" />
     <Compile Include="Classes\Extensions.cs" />
+    <Compile Include="Classes\ProcessingEventArgs.cs" />
     <Compile Include="Classes\ProcessingResult.cs" />
     <Compile Include="Classes\Settings.cs" />
     <Compile Include="Classes\Structure.cs" />

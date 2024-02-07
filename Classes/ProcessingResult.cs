@@ -11,12 +11,6 @@ namespace MusicSorter.Classes
         public List<Error> Errors { get; set; }
         public bool HasErrors { get { return Errors.Count > 0; } }
 
-        public bool Canceled { get; private set; }
-        internal void SetCanceled()
-        {
-            Canceled = true;
-        }
-
         public ProcessingResult()
         {
             Errors = new List<Error>();

@@ -4,9 +4,14 @@ using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Windows.Interop;
+using System.Windows.Threading;
+using MS.WindowsAPICodePack.Internal;
 using MusicSorter.Helper;
+using SVGImage.SVG;
 using static System.Net.WebRequestMethods;
 
 namespace MusicSorter.Classes
@@ -14,56 +19,48 @@ namespace MusicSorter.Classes
     internal class Structure
     {
         private static readonly Random _random = new Random();
-        private readonly Settings _settings;
 
-        internal List<DirectoryInfo> Folders { get; set; }
-        internal List<FileInfo> Files { get; set; }
+        internal Settings Settings { get; private set; }
+        internal List<DirectoryInfo> Folders { get; private set; }
+        internal List<FileInfo> Files { get; private set; }
 
-        public Structure(Settings settings)
+        public Structure()
         {
             Folders = new List<DirectoryInfo>();
             Files = new List<FileInfo>();
-            _settings = settings;
         }
 
+        internal void Clear()
+        {
+            Files.Clear();
+            Folders.Clear();
+        }
         internal string GetBasePath()
         {
-            return _settings.Path;
+            return Settings.Path;
         }
-
-
-        internal async Task Load()
+        internal async Task Load(Settings settings)
         {
-            if (!Directory.Exists(_settings.Path))
+            Settings = settings;
+
+            if (!Directory.Exists(Settings.Path))
             {
-                throw new DirectoryNotFoundException(_settings.Path);
+                throw new DirectoryNotFoundException(Settings.Path);
             }
 
-            Files.Clear();
+            Clear();
 
             Task task = new Task(() =>
             {
-                var baseDir = new DirectoryInfo(_settings.Path);
+                var baseDir = new DirectoryInfo(Settings.Path);
                 DirectoryInfo[] folders = null;
 
                 Folders.Add(baseDir);
                 Files.AddRange(baseDir.EnumerateFiles("*.*", SearchOption.TopDirectoryOnly));
 
-                if (_settings.Subfolders)
+                if (Settings.Subfolders)
                 {
-                    //var folders = FileSystemHelper.GetDirectories(_basePath);
-                    switch (_settings.SortingOrder)
-                    {
-                        case SortingOrder.Ascending:
-                            folders = baseDir.GetDirectories().OrderBy(a => a.Name).ToArray();
-                            break;
-                        case SortingOrder.Descending:
-                            folders = baseDir.GetDirectories().OrderByDescending(a => a.Name).ToArray();
-                            break;
-                        case SortingOrder.Random:
-                            folders = baseDir.GetDirectories().OrderBy(a => _random.Next()).ToArray();
-                            break;
-                    }
+                    folders = baseDir.GetDirectories().ToArray();
 
                     foreach (var dir in folders)
                     {
@@ -103,53 +100,156 @@ namespace MusicSorter.Classes
             await task;
             return;
         }
-
-        //private static int GetDirRecurseEnumerationOptions(string path, EnumerationOptions options, ref int counter)
-        //{
-        //    try
-        //    {
-        //        foreach (string dir in Directory.EnumerateDirectories(path, @"*", options))
-        //        {
-        //            // Console.WriteLine(dir);
-        //            counter++;
-        //            GetDirRecurseEnumerationOptions(dir, options, ref counter);
-        //        }
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        // Console.WriteLine(e.Message);
-        //    }
-
-        //    return counter;
-        //}
-
-        //private static int GetDirRecurseSearchOption(string path, ref int counter)
-        //{
-        //    try
-        //    {
-        //        foreach (string dir in Directory.EnumerateDirectories(path, @"*", SearchOption.TopDirectoryOnly))
-        //        {
-        //            // Console.WriteLine(dir);
-        //            counter++;
-        //            GetDirRecurseSearchOption(dir, ref counter);
-        //        }
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        // Console.WriteLine(e.Message);
-        //    }
-
-        //    return counter;
-        //}
-
-        internal void Clear()
+        internal async Task<ProcessingResult> Process()
         {
-            Folders = null;
+            if (Settings.Simulate)
+            {
+                return await Simulate();
+            }
+
+            var result = new ProcessingResult();
+            int filesCount = 0;
+            string folder = null;
+            int foldersCount = 0;
+            List<FileInfo> files = null;
+            List<DirectoryInfo> folders = null;
+
+            var task = new Task(() =>
+            {
+                try
+                {
+                    switch (Settings.SortingOrder)
+                    {
+                        case SortingOrder.Ascending:
+                            folders = Folders.OrderBy(a => a.Name).ToList();
+                            break;
+                        case SortingOrder.Descending:
+                            folders = Folders.OrderByDescending(a => a.Name).ToList();
+                            break;
+                        case SortingOrder.Random:
+                            folders = Folders.OrderBy(a => _random.Next()).ToList();
+                            break;
+                    }
+                    foreach (var dir in folders)
+                    {
+                        foldersCount++;
+                        folder = dir.FullName.EndsWith("\\") ? dir.FullName : dir.FullName + "\\";
+
+                        switch (Settings.SortingOrder)
+                        {
+                            case SortingOrder.Ascending:
+                                files = Files.Where(f => f.FullName == (folder + f.Name)).OrderBy(a => a.Name).ToList();
+                                break;
+                            case SortingOrder.Descending:
+                                files = Files.Where(f => f.FullName == (folder + f.Name)).OrderByDescending(a => a.Name).ToList();
+                                break;
+                            case SortingOrder.Random:
+                                files = Files.Where(f => f.FullName == (folder + f.Name)).OrderBy(a => _random.Next()).ToList();
+                                break;
+                        }
+                        Console.WriteLine($"DIR: {dir} ({files.Count})");
+
+                        foreach (var file in files)
+                        {
+                            filesCount++;
+
+                            Console.WriteLine($"Simulating file: {file}");
+                            Thread.Sleep(42);
+                            OnProgressChanged(new ProcessingEventArgs($"Simulating Folder {foldersCount} > File {filesCount}...", filesCount, file, dir));
+                        }
+                    }
+                }
+                catch (Exception)
+                {
+
+                    throw;
+                }
+
+
+            });
+            task.Start();
+            await task;
+            return result;
+        }
+        private async Task<ProcessingResult> Simulate()
+        {
+            var result = new ProcessingResult();
+            int filesCount = 0;
+            string folder = null;
+            int foldersCount = 0;
+            List<FileInfo> files = null;
+            List<DirectoryInfo> folders = null;
+
+            var task = new Task(() =>
+            {
+                try
+                {
+                    switch (Settings.SortingOrder)
+                    {
+                        case SortingOrder.Ascending:
+                            folders = Folders.OrderBy(a => a.Name).ToList();
+                            break;
+                        case SortingOrder.Descending:
+                            folders = Folders.OrderByDescending(a => a.Name).ToList();
+                            break;
+                        case SortingOrder.Random:
+                            folders = Folders.OrderBy(a => _random.Next()).ToList();
+                            break;
+                    }
+                    foreach (var dir in folders)
+                    {
+                        foldersCount++;
+                        folder = dir.FullName.EndsWith("\\") ? dir.FullName : dir.FullName + "\\";
+
+                        switch (Settings.SortingOrder)
+                        {
+                            case SortingOrder.Ascending:
+                                files = Files.Where(f => f.FullName == (folder + f.Name)).OrderBy(a => a.Name).ToList();
+                                break;
+                            case SortingOrder.Descending:
+                                files = Files.Where(f => f.FullName == (folder + f.Name)).OrderByDescending(a => a.Name).ToList();
+                                break;
+                            case SortingOrder.Random:
+                                files = Files.Where(f => f.FullName == (folder + f.Name)).OrderBy(a => _random.Next()).ToList();
+                                break;
+                        }
+                        Console.WriteLine($"DIR: {dir} ({files.Count})");
+
+                        foreach (var file in files)
+                        {
+                            filesCount++;
+
+                            Console.WriteLine($"Simulating file: {file}");
+                            Thread.Sleep(8);
+                            OnProgressChanged(new ProcessingEventArgs($"Simulating Folder {foldersCount} > File {filesCount}...", filesCount, file, dir));
+                        }
+                    }
+                }
+                catch (Exception)
+                {
+
+                    throw;
+                }
+
+
+            });
+            task.Start();
+            await task;
+            Thread.Sleep(100);
+            return result;
         }
 
+        [Obsolete]
         public bool Loaded
         {
             get { return Files.Count > 0 ? true : false; }
+        }
+
+        // EVENTS
+        public event EventHandler<ProcessingEventArgs> ProgressChanged;
+        private void OnProgressChanged(ProcessingEventArgs progress)
+        {
+            ProgressChanged?.Invoke(this, progress);
         }
     }
 }
