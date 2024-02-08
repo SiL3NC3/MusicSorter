@@ -118,13 +118,73 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="AscendingOrder" xml:space="preserve">
+    <value>Ascending Order</value>
+  </data>
+  <data name="DescendingOrder" xml:space="preserve">
+    <value>Descending Order</value>
+  </data>
+  <data name="DropMessage" xml:space="preserve">
+    <value>Select a folder or drop it here</value>
+  </data>
+  <data name="Files" xml:space="preserve">
+    <value>Files:</value>
+  </data>
+  <data name="Folder" xml:space="preserve">
+    <value>Folder</value>
+  </data>
+  <data name="Folders" xml:space="preserve">
+    <value>Folders:</value>
+  </data>
+  <data name="Info" xml:space="preserve">
+    <value>INFO</value>
+  </data>
+  <data name="Options" xml:space="preserve">
+    <value>Options</value>
+  </data>
+  <data name="Path" xml:space="preserve">
+    <value>Path:</value>
+  </data>
+  <data name="RandomOrder" xml:space="preserve">
+    <value>Random Order</value>
+  </data>
   <data name="random_icon_original" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\resources\random-icon-original.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Reset" xml:space="preserve">
+    <value>Reset</value>
+  </data>
+  <data name="Select" xml:space="preserve">
+    <value>Select</value>
+  </data>
+  <data name="Simulate" xml:space="preserve">
+    <value>Simulate</value>
+  </data>
+  <data name="SortFolders" xml:space="preserve">
+    <value>Sort folders</value>
+  </data>
+  <data name="Sorting" xml:space="preserve">
+    <value>Sorting</value>
   </data>
   <data name="sort_ascending_icon_original" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\resources\sort-ascending-icon-original.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="sort_descending_icon_original" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\resources\sort-descending-icon-original.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="StartProcessing" xml:space="preserve">
+    <value>START PROCESSING</value>
+  </data>
+  <data name="Status" xml:space="preserve">
+    <value>Status</value>
+  </data>
+  <data name="Subfolder" xml:space="preserve">
+    <value>Subfolder</value>
+  </data>
+  <data name="Testing" xml:space="preserve">
+    <value>Testing</value>
+  </data>
+  <data name="Title" xml:space="preserve">
+    <value>Music Sorter</value>
   </data>
 </root>

@@ -8,6 +8,7 @@ using System.ComponentModel;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -20,6 +21,7 @@ using System.Windows.Input;
 using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Media.Effects;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace MusicSorter
 {
@@ -45,6 +47,7 @@ namespace MusicSorter
         public MainWindow()
         {
             InitializeComponent();
+            SetProductVersion();
 
             LabelStatus.Content = null;
 
@@ -58,6 +61,11 @@ namespace MusicSorter
             SetState(States.Init);
         }
 
+        private void SetProductVersion()
+        {
+            var v = Assembly.GetExecutingAssembly().GetName().Version;
+            this.Title += $" v{v.Major}.{v.Minor}";
+        }
         private void SetSortOrder(SortingOrder order, bool save = false)
         {
             switch (order)

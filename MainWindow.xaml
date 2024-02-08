@@ -3,9 +3,10 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:p="clr-namespace:MusicSorter.Properties"
         xmlns:local="clr-namespace:MusicSorter"
-        mc:Ignorable="d" Closing="Window_Closing"
-        Title="Music Sorter" Width="333" WindowStartupLocation="CenterScreen" Topmost="True" ResizeMode="CanMinimize" SizeToContent="Height" FontSize="12">
+        mc:Ignorable="d" Closing="Window_Closing" Icon="/Resources/MusicSorter.ico"
+    Title="{x:Static p:Resources.Title}" Width="400" WindowStartupLocation="CenterScreen" Topmost="True" ResizeMode="CanMinimize" SizeToContent="Height" FontSize="12">
     <Window.Resources>
 
     </Window.Resources>
@@ -20,9 +21,10 @@
         </Grid.RowDefinitions>
 
         <!--SORTING-MODE-->
-        <GroupBox x:Name="GroupBoxSorting" Grid.Row="0" Header="Sorting Mode" Margin="8 8 8 4">
+        <!--<GroupBox x:Name="GroupBoxSorting" Grid.Row="0" Header="Sorting Mode" Margin="8 8 8 4">-->
+        <GroupBox x:Name="GroupBoxSorting" Grid.Row="0" Header="{x:Static p:Resources.Sorting}" Margin="8 8 8 4">
             <UniformGrid Columns="3">
-                <Button x:Name="ButtonAscending" Grid.Column="3" Click="ButtonAscending_Click" ToolTip="Ascending Order" Width="70" Height="70" Background="White" >
+                <Button x:Name="ButtonAscending" Grid.Column="3" Click="ButtonAscending_Click" ToolTip="{x:Static p:Resources.AscendingOrder}" Width="70" Height="70" Background="White" >
                     <StackPanel Orientation="Horizontal">
                         <Path Width="45" Height="45"  
                                   Stroke="{Binding Foreground, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Button}}}" 
@@ -30,7 +32,7 @@
                                   Stretch="Fill" Data="{StaticResource icon_ascending}" StrokeThickness="0.5" Margin="8"/>
                     </StackPanel>
                 </Button>
-                <Button x:Name="ButtonDescending" Grid.Column="3" PreviewMouseDown="ButtonDescending_Click" ToolTip="Descending Order" Width="70" Height="70" Background="Transparent">
+                <Button x:Name="ButtonDescending" Grid.Column="3" PreviewMouseDown="ButtonDescending_Click" ToolTip="{x:Static p:Resources.DescendingOrder}" Width="70" Height="70" Background="Transparent">
                     <StackPanel Orientation="Horizontal">
                         <Path Width="45" Height="45"  
                                   Stroke="{Binding Foreground, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Button}}}" 
@@ -38,7 +40,7 @@
                                   Stretch="Fill" Data="{StaticResource icon_descending}" StrokeThickness="0.5" Margin="8"/>
                     </StackPanel>
                 </Button>
-                <Button x:Name="ButtonRandom" Grid.Column="3" Click="ButtonRandom_Click" ToolTip="Random Order" Width="70" Height="70" Background="Transparent">
+                <Button x:Name="ButtonRandom" Grid.Column="3" Click="ButtonRandom_Click" ToolTip="{x:Static p:Resources.RandomOrder}" Width="70" Height="70" Background="Transparent">
                     <StackPanel Orientation="Horizontal">
                         <Path Width="45" Height="45" 
                                   Stroke="{Binding Foreground, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Button}}}" 
@@ -50,11 +52,11 @@
         </GroupBox>
 
         <!--OPTIONS-->
-        <GroupBox x:Name="GroupBoxOptions" Grid.Row="1" Header="Options" Margin="4">
+        <GroupBox x:Name="GroupBoxOptions" Grid.Row="1" Header="{x:Static p:Resources.Options}" Margin="4">
             <UniformGrid VerticalAlignment="Center" Columns="3" Margin="4">
-                <CheckBox x:Name="CheckBoxOptionSubfolders" HorizontalAlignment="Center" Click="CheckBoxOptionSubfolders_Click">Subfolders</CheckBox>
-                <CheckBox x:Name="CheckBoxOptionSortFolders" HorizontalAlignment="Center" Click="CheckBoxOptionSortFolders_Click">Sort folders</CheckBox>
-                <CheckBox x:Name="CheckBoxOptionSimulate" HorizontalAlignment="Center" Click="CheckBoxOptionSimulate_Click">Simulate</CheckBox>
+                <CheckBox x:Name="CheckBoxOptionSubfolders" HorizontalAlignment="Center" Click="CheckBoxOptionSubfolders_Click" Content="{x:Static p:Resources.Subfolder}"/>
+                <CheckBox x:Name="CheckBoxOptionSortFolders" HorizontalAlignment="Center" Click="CheckBoxOptionSortFolders_Click" Content="{x:Static p:Resources.SortFolders}"/>
+                <CheckBox x:Name="CheckBoxOptionSimulate" HorizontalAlignment="Center" Click="CheckBoxOptionSimulate_Click" Content="{x:Static p:Resources.Simulate}"/>
             </UniformGrid>
         </GroupBox>
 
@@ -67,8 +69,8 @@
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
-                    <TextBlock VerticalAlignment="Center" Background="white" Padding="3" Margin="-2 0 0 0">Folder</TextBlock>
-                    <Button x:Name="ButtonSelect" Grid.Column="3" Click="ButtonSelect_Click" Margin="2 4" Padding="4 1">Select</Button>
+                    <TextBlock VerticalAlignment="Center" Background="white" Padding="3" Margin="-2 0 0 0" Text="{x:Static p:Resources.Folder}"/>
+                    <Button x:Name="ButtonSelect" Grid.Column="3" Click="ButtonSelect_Click" Margin="2 4" Padding="4 1" Content="{x:Static p:Resources.Select}"/>
                 </Grid>
             </GroupBox.Header>
             <Grid Height="70">
@@ -85,12 +87,12 @@
                     </Grid.RowDefinitions>
 
                     <StackPanel Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2" Orientation="Horizontal" HorizontalAlignment="Left" Margin="2" IsHitTestVisible="False">
-                        <Label HorizontalAlignment="Right" VerticalAlignment="Center" FontWeight="Bold" Padding="0" Margin="2" IsHitTestVisible="False">Path:</Label>
+                        <Label HorizontalAlignment="Right" VerticalAlignment="Center" FontWeight="Bold" Padding="0" Margin="2" IsHitTestVisible="False" Content="{x:Static p:Resources.Path}"/>
                         <TextBlock x:Name="LabelPath" VerticalAlignment="Center" Padding="0" HorizontalAlignment="left" Margin="2" IsHitTestVisible="False" TextWrapping="Wrap" >...</TextBlock>
                     </StackPanel>
 
-                    <Label Grid.Column="0" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Bottom" FontWeight="Bold" Padding="0"  IsHitTestVisible="False">Folders:</Label>
-                    <Label Grid.Column="1" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Bottom" FontWeight="Bold" Padding="0" IsHitTestVisible="False">Files:</Label>
+                    <Label Grid.Column="0" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Bottom" FontWeight="Bold" Padding="0" IsHitTestVisible="False" Content="{x:Static p:Resources.Folders}"/>
+                    <Label Grid.Column="1" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Bottom" FontWeight="Bold" Padding="0" IsHitTestVisible="False" Content="{x:Static p:Resources.Files}"/>
 
                     <Label Grid.Column="0" Grid.Row="2" Padding="0" x:Name="LabelDetailsFolderCount" HorizontalAlignment="Center" VerticalAlignment="Top" IsHitTestVisible="False">0</Label>
                     <Label Grid.Column="1" Grid.Row="2" Padding="0" x:Name="LabelDetailsFilesCount" HorizontalAlignment="Center" VerticalAlignment="Top" IsHitTestVisible="False">0</Label>
@@ -98,13 +100,13 @@
                 </Grid>
                 <Border x:Name="BorderDropZone" DragEnter="BorderDropZone_DragEnter" DragLeave="BorderDropZone_DragLeave" AllowDrop="True" Drop="BorderDropZone_Drop" 
                         Background="AliceBlue"  Visibility="Collapsed" Margin="0">
-                    <Label Name="lb" VerticalAlignment="Center" HorizontalAlignment="Center" IsHitTestVisible="False" >Select a folder or drop it here</Label>
+                    <Label Name="lb" VerticalAlignment="Center" HorizontalAlignment="Center" IsHitTestVisible="False" Content="{x:Static p:Resources.DropMessage}"/>
                 </Border>
             </Grid>
         </GroupBox>
 
         <!--STATUS-->
-        <GroupBox x:Name="GroupBoxStatus" Grid.Row="3" Header="Status" Margin="4">
+        <GroupBox x:Name="GroupBoxStatus" Grid.Row="3" Header="{x:Static p:Resources.Status}" Margin="4">
             <Label x:Name="LabelStatus" Padding="0" HorizontalAlignment="Center" Margin="4" IsHitTestVisible="False">
                 ...</Label>
         </GroupBox>
@@ -115,9 +117,9 @@
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
             <Label x:Name="LabelFocus" HorizontalAlignment="Left"></Label>
-            <Button x:Name="ButtonInfo" Grid.Column="1" Click="ButtonInfo_Click" Padding="4 2" HorizontalAlignment="Left" VerticalAlignment="Center" >INFO</Button>
-            <Button x:Name="ButtonStart"  Click="ButtonStart_Click" Padding="8 4" FontSize="16" HorizontalAlignment="Center">START PROCESSING</Button>
-            <Button x:Name="ButtonReset" Grid.Column="1" Click="ButtonReset_Click" Padding="4 2" HorizontalAlignment="Right" VerticalAlignment="Center" >Reset</Button>
+            <Button x:Name="ButtonInfo" Grid.Column="1" Click="ButtonInfo_Click" Padding="4 2" HorizontalAlignment="Left" VerticalAlignment="Center" Content="{x:Static p:Resources.Info}"/>
+            <Button x:Name="ButtonStart"  Click="ButtonStart_Click" Padding="8 4" FontSize="16" HorizontalAlignment="Center" Content="{x:Static p:Resources.StartProcessing}"></Button>
+            <Button x:Name="ButtonReset" Grid.Column="1" Click="ButtonReset_Click" Padding="4 2" HorizontalAlignment="Right" VerticalAlignment="Center" Content="{x:Static p:Resources.Reset}" />
         </Grid>
 
         <!--PROGRESSBAR-->
