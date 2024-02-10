@@ -97,6 +97,9 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.3500.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="About" xml:space="preserve">
+    <value>ÜBER</value>
+  </data>
   <data name="AscendingOrder" xml:space="preserve">
     <value>Aufsteigende Reihenfolge</value>
   </data>
@@ -126,6 +129,9 @@
   </data>
   <data name="RandomOrder" xml:space="preserve">
     <value>Zufällige Reihenfolge</value>
+  </data>
+  <data name="ReadingFolder" xml:space="preserve">
+    <value>Lese Ordner... Bitte warten.</value>
   </data>
   <data name="Reset" xml:space="preserve">
     <value>Reset</value>

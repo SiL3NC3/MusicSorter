@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:p="clr-namespace:MusicSorter.Properties"
         xmlns:local="clr-namespace:MusicSorter"
-        mc:Ignorable="d" Closing="Window_Closing" Icon="/Resources/MusicSorter.ico"
+        mc:Ignorable="d" Closing="Window_Closing" Icon="/Resources/MusicSorter2.ico"
     Title="{x:Static p:Resources.Title}" Width="400" WindowStartupLocation="CenterScreen" Topmost="True" ResizeMode="CanMinimize" SizeToContent="Height" FontSize="12">
     <Window.Resources>
 

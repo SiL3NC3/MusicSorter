@@ -6,9 +6,11 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Resources;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -211,7 +213,7 @@ namespace MusicSorter
                 }
 
                 Console.WriteLine("Read folder...");
-                SetStatus("Reading folder... Please wait.", true);
+                SetStatus(Properties.Resources.ReadingFolder, true);
 
                 _processing = true;
 

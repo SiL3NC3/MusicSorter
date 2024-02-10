@@ -3,11 +3,18 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:p="clr-namespace:MusicSorter.Properties"
         xmlns:local="clr-namespace:MusicSorter"
         mc:Ignorable="d"
-        Title="ABOUT" Height="200" Width="350" WindowStartupLocation="CenterOwner" WindowStyle="ToolWindow" ShowInTaskbar="False">
+        Title="{x:Static p:Resources.About}" Height="200" Width="350" WindowStartupLocation="CenterOwner" WindowStyle="ToolWindow" ShowInTaskbar="False">
     <Grid>
-        <Image Source="/Resources/MusicSorter_150px.png" HorizontalAlignment="Left" />
-
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="2*"/>
+        </Grid.ColumnDefinitions>
+        <Image Grid.Column="0" Source="/Resources/MusicSorter2_100px.png" Width="100" Height="100"  />
+        <StackPanel Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center">
+            <Label Content="{x:Static p:Resources.Title}" />
+        </StackPanel>
     </Grid>
 </Window>

@@ -38,7 +38,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>Resources\MusicSorter.ico</ApplicationIcon>
+    <ApplicationIcon>Resources\MusicSorter2.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup />
   <ItemGroup>
@@ -159,6 +159,9 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="Resources\MusicSorter2_100px.png" />
+    <Resource Include="Resources\MusicSorter2.ico" />
+    <Content Include="Resources\MusicSorter2.svg" />
     <Resource Include="Resources\MusicSorter.ico" />
     <Content Include="Resources\MusicSorter.svg" />
     <Resource Include="Resources\MusicSorter_150px.png" />

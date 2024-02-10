@@ -12,7 +12,6 @@ using System.Windows.Threading;
 using MS.WindowsAPICodePack.Internal;
 using MusicSorter.Helper;
 using SVGImage.SVG;
-using static System.Net.WebRequestMethods;
 
 namespace MusicSorter.Classes
 {
@@ -73,12 +72,6 @@ namespace MusicSorter.Classes
                             {
                                 Files.AddRange(files);
 
-                                foreach (var d in files)
-                                {
-                                    Console.WriteLine(d.FullName);
-                                }
-                                Console.WriteLine(files.Count() + " items");
-
                                 var subfolders = FileSystemHelper.GetDirectories(dir.FullName);
 
                                 foreach (var subfolder in subfolders)
@@ -102,11 +95,12 @@ namespace MusicSorter.Classes
         }
         internal async Task<ProcessingResult> Process()
         {
+#if (DEBUG)
             if (Settings.Simulate)
             {
                 return await Simulate();
             }
-
+#endif
             var result = new ProcessingResult();
             int filesCount = 0;
             string folder = null;
@@ -114,61 +108,108 @@ namespace MusicSorter.Classes
             List<FileInfo> files = null;
             List<DirectoryInfo> folders = null;
 
+            DriveInfo driveInfo = null;
+            string tmpFolder = null;
+            string tempFile = null;
+
             var task = new Task(() =>
             {
-                try
+                switch (Settings.SortingOrder)
                 {
+                    case SortingOrder.Ascending:
+                        folders = Folders.OrderBy(a => a.Name).ToList();
+                        break;
+                    case SortingOrder.Descending:
+                        folders = Folders.OrderByDescending(a => a.Name).ToList();
+                        break;
+                    case SortingOrder.Random:
+                        folders = Folders.OrderBy(a => _random.Next()).ToList();
+                        break;
+                }
+
+                foreach (var dir in folders)
+                {
+                    foldersCount++;
+                    folder = dir.FullName.EndsWith("\\") ? dir.FullName : dir.FullName + "\\";
+
                     switch (Settings.SortingOrder)
                     {
                         case SortingOrder.Ascending:
-                            folders = Folders.OrderBy(a => a.Name).ToList();
+                            files = Files.Where(f => f.FullName == (folder + f.Name)).OrderBy(a => a.Name).ToList();
                             break;
                         case SortingOrder.Descending:
-                            folders = Folders.OrderByDescending(a => a.Name).ToList();
+                            files = Files.Where(f => f.FullName == (folder + f.Name)).OrderByDescending(a => a.Name).ToList();
                             break;
                         case SortingOrder.Random:
-                            folders = Folders.OrderBy(a => _random.Next()).ToList();
+                            files = Files.Where(f => f.FullName == (folder + f.Name)).OrderBy(a => _random.Next()).ToList();
                             break;
                     }
-                    foreach (var dir in folders)
+                    Console.WriteLine($"DIR: {dir} ({files.Count})");
+
+                    StringBuilder cmd = new StringBuilder();
+                    // Move to ~tmp
+                    foreach (var file in files)
                     {
-                        foldersCount++;
-                        folder = dir.FullName.EndsWith("\\") ? dir.FullName : dir.FullName + "\\";
-
-                        switch (Settings.SortingOrder)
+                        if (driveInfo == null)
                         {
-                            case SortingOrder.Ascending:
-                                files = Files.Where(f => f.FullName == (folder + f.Name)).OrderBy(a => a.Name).ToList();
-                                break;
-                            case SortingOrder.Descending:
-                                files = Files.Where(f => f.FullName == (folder + f.Name)).OrderByDescending(a => a.Name).ToList();
-                                break;
-                            case SortingOrder.Random:
-                                files = Files.Where(f => f.FullName == (folder + f.Name)).OrderBy(a => _random.Next()).ToList();
-                                break;
+                            driveInfo = FileSystemHelper.GetDrive(file.FullName);
+                            tmpFolder = driveInfo.Name + "~MusicSorter~TMP\\";
+
+                            if (!Directory.Exists(tmpFolder))
+                                Directory.CreateDirectory(tmpFolder);
                         }
-                        Console.WriteLine($"DIR: {dir} ({files.Count})");
 
-                        foreach (var file in files)
+                        if (file.IsReadOnly)
                         {
-                            filesCount++;
+                            try { File.SetAttributes(file.FullName, FileAttributes.Normal); }
+                            catch (Exception) { }
+                        }
 
-                            Console.WriteLine($"Simulating file: {file}");
-                            Thread.Sleep(42);
-                            OnProgressChanged(new ProcessingEventArgs($"Simulating Folder {foldersCount} > File {filesCount}...", filesCount, file, dir));
+                        tempFile = tmpFolder + file.Name;
+                        File.Move(file.FullName, tempFile);
+
+                        // Prepare undo batch file
+                        cmd.Append($"mv {file.Name} {file.DirectoryName}{Environment.NewLine}");
+
+                    }
+                    File.WriteAllText($"{tmpFolder}~undo.bat", cmd.ToString());
+                    Console.WriteLine("All folder files moved to tmp-folder.");
+
+                    if (Settings.SortFolders)
+                    {
+                        if (dir.FullName.ToLower() != driveInfo.Name.ToLower() && FileSystemHelper.IsDirectoryEmpty(dir.FullName))
+                        {
+
+                            Directory.Delete(dir.FullName);
+                            Directory.CreateDirectory(dir.FullName);
+                            Console.WriteLine($"Folder '{dir}' recreated (Sorted)");
+                        }
+                        else
+                        {
+                            Console.WriteLine($"WARNING! Folder '{dir}' cannot be recreated (Sorted), folder not empty!");
                         }
                     }
-                }
-                catch (Exception)
-                {
 
-                    throw;
+                    foreach (var file in files)
+                    {
+                        filesCount++;
+
+                        tempFile = tmpFolder + file.Name;
+                        File.Move(tempFile, file.FullName);
+                        Console.WriteLine($" - File: {file} moved.");
+
+                        Thread.Sleep(8);
+                        OnProgressChanged(new ProcessingEventArgs($"Processing Folder {foldersCount} > File {filesCount}...", filesCount, file, dir));
+                    }
+
                 }
 
+                Directory.Delete(tmpFolder, true);
 
             });
             task.Start();
             await task;
+            Thread.Sleep(10);
             return result;
         }
         private async Task<ProcessingResult> Simulate()
@@ -235,14 +276,8 @@ namespace MusicSorter.Classes
             });
             task.Start();
             await task;
-            Thread.Sleep(100);
+            Thread.Sleep(10);
             return result;
-        }
-
-        [Obsolete]
-        public bool Loaded
-        {
-            get { return Files.Count > 0 ? true : false; }
         }
 
         // EVENTS

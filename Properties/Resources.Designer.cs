@@ -61,6 +61,15 @@ namespace MusicSorter.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to ABOUT.
+        /// </summary>
+        public static string About {
+            get {
+                return ResourceManager.GetString("About", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Ascending Order.
         /// </summary>
         public static string AscendingOrder {
@@ -157,6 +166,15 @@ namespace MusicSorter.Properties {
         public static string RandomOrder {
             get {
                 return ResourceManager.GetString("RandomOrder", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Reading folder... Please wait..
+        /// </summary>
+        public static string ReadingFolder {
+            get {
+                return ResourceManager.GetString("ReadingFolder", resourceCulture);
             }
         }
         
