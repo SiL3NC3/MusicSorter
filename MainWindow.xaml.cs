@@ -482,7 +482,8 @@ namespace MusicSorter
 
         private void Structure_ProgressChanged(object sender, ProcessingEventArgs e)
         {
-            this.Dispatcher.Invoke(() => { ProgressBarStatus.Value = e.Progress; });
+            if (e.Progress != -1)
+                this.Dispatcher.Invoke(() => { ProgressBarStatus.Value = e.Progress; });
             this.Dispatcher.Invoke(() => { SetStatus(e.Message, true); });
         }
 
