@@ -154,11 +154,13 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
+    <None Include="README.md" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="screen.jpg" />
     <Resource Include="Resources\MusicSorter2_100px.png" />
     <Resource Include="Resources\MusicSorter2.ico" />
     <Content Include="Resources\MusicSorter2.svg" />
