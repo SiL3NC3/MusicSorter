@@ -293,7 +293,7 @@ namespace MusicSorter
 
             ProgressBarStatus.Maximum = _structure.Files.Count();
 
-            SimpleLogger.Instance.Info("Processing stared. Path: " + _settings.Path);
+            SimpleLogger.Instance.Info("Processing started. Path: " + _settings.Path);
 
             var result = await _structure.Process();
 

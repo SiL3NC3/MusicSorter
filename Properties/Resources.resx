@@ -121,6 +121,15 @@
   <data name="About" xml:space="preserve">
     <value>ABOUT</value>
   </data>
+  <data name="AboutDescription" xml:space="preserve">
+    <value>A handy tool to easy reorder music (files) on removable drives.</value>
+  </data>
+  <data name="AboutForRobert" xml:space="preserve">
+    <value>For Robert.</value>
+  </data>
+  <data name="AboutLinkText" xml:space="preserve">
+    <value>Download and Sourcecode</value>
+  </data>
   <data name="AscendingOrder" xml:space="preserve">
     <value>Ascending Order</value>
   </data>
@@ -160,6 +169,11 @@ Please select an existing folder!</value>
 
 NJoy your proper sorted music. ;)</value>
   </data>
+  <data name="MessageFinalWithErrors" xml:space="preserve">
+    <value>Successfully finished, but there were errors.
+
+NJoy your proper sorted music. ;)</value>
+  </data>
   <data name="MessageLocalDrive" xml:space="preserve">
     <value>Local Drive detected!
 Please only use the application on removable drives (USB, etc.).
@@ -193,11 +207,6 @@ Do you really want to quit?</value>
   </data>
   <data name="ProcessingFinished" xml:space="preserve">
     <value>Processing finished.</value>
-  </data>
-  <data name="MessageFinalWithErrors" xml:space="preserve">
-    <value>Successfully finished, but there were errors.
-
-NJoy your proper sorted music. ;)</value>
   </data>
   <data name="RandomOrder" xml:space="preserve">
     <value>Random Order</value>

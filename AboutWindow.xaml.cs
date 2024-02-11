@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -22,6 +23,16 @@ namespace MusicSorter
         public AboutWindow()
         {
             InitializeComponent();
+            SetProductVersion();
+
+        }
+        private void SetProductVersion()
+        {
+            var v = Assembly.GetExecutingAssembly().GetName().Version;
+            LabelVersion.Content = $"v{v.Major}.{v.Minor}";
+#if (DEBUG)
+            LabelVersion.Content += " [DEBUG]";
+#endif
         }
     }
 }

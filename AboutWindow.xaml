@@ -6,15 +6,35 @@
         xmlns:p="clr-namespace:MusicSorter.Properties"
         xmlns:local="clr-namespace:MusicSorter"
         mc:Ignorable="d"
-        Title="{x:Static p:Resources.About}" Height="200" Width="350" WindowStartupLocation="CenterOwner" WindowStyle="ToolWindow" ShowInTaskbar="False">
+        Title="{x:Static p:Resources.About}" SizeToContent="Height" Width="380" WindowStartupLocation="CenterOwner" WindowStyle="ToolWindow" ShowInTaskbar="False">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="2*"/>
         </Grid.ColumnDefinitions>
-        <Image Grid.Column="0" Source="/Resources/MusicSorter2_100px.png" Width="100" Height="100"  />
+        <Grid Grid.Column="0" Background="AliceBlue">
+            <Image Source="/Resources/MusicSorter2_100px.png" Width="100" Height="100"  />
+        </Grid>
         <StackPanel Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center">
-            <Label Content="{x:Static p:Resources.Title}" />
+            <Label x:Name="LabelTitle" Content="{x:Static p:Resources.Title}" FontSize="24" FontWeight="Bold" VerticalAlignment="Bottom" HorizontalAlignment="Center" Padding="0 16 0 0"/>
+            <Label x:Name="LabelVersion" Content="vX.X" HorizontalAlignment="Center" VerticalAlignment="Top" HorizontalContentAlignment="Right" Padding="0 0 0 8"
+                   FontSize="10" Width="{Binding Path=ActualWidth, ElementName=LabelTitle}"/>
+            <TextBlock Text="{x:Static p:Resources.AboutDescription}" HorizontalAlignment="Center" TextWrapping="Wrap" TextAlignment="Justify" Padding="16 8"/>
+            <Separator/>
+
+            <StackPanel Orientation="Vertical" Margin="0 8 0 0">
+                <TextBlock Text="{x:Static p:Resources.AboutLinkText}" HorizontalAlignment="Center"/>
+                <TextBlock HorizontalAlignment="Center">
+                <Hyperlink NavigateUri="https://speechcentral.net/">
+                    <Hyperlink.Inlines>
+                        <Run Text="GitHub.com"/>
+                    </Hyperlink.Inlines>
+                </Hyperlink>
+                </TextBlock>
+            </StackPanel>
+            <Separator Margin="0 8"/>
+
+            <Label Content="{x:Static p:Resources.AboutForRobert}" HorizontalAlignment="Center" FontStyle="Italic" Padding="0 0 0 16" />
         </StackPanel>
     </Grid>
 </Window>

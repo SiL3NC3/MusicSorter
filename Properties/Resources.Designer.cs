@@ -70,6 +70,33 @@ namespace MusicSorter.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to A handy tool to easy reorder music (files) on removable drives..
+        /// </summary>
+        public static string AboutDescription {
+            get {
+                return ResourceManager.GetString("AboutDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to For Robert..
+        /// </summary>
+        public static string AboutForRobert {
+            get {
+                return ResourceManager.GetString("AboutForRobert", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Download and Sourcecode.
+        /// </summary>
+        public static string AboutLinkText {
+            get {
+                return ResourceManager.GetString("AboutLinkText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Ascending Order.
         /// </summary>
         public static string AscendingOrder {

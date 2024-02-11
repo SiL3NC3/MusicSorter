@@ -100,6 +100,15 @@
   <data name="About" xml:space="preserve">
     <value>ÜBER</value>
   </data>
+  <data name="AboutDescription" xml:space="preserve">
+    <value>Ein nützliches Werkzeug um leicht Musik (Dateien) auf einem externen Laufwerk neu zu ordnen.</value>
+  </data>
+  <data name="AboutForRobert" xml:space="preserve">
+    <value>Für Robert.</value>
+  </data>
+  <data name="AboutLinkText" xml:space="preserve">
+    <value>Download und Quellcode</value>
+  </data>
   <data name="AscendingOrder" xml:space="preserve">
     <value>Aufsteigende Reihenfolge</value>
   </data>
@@ -139,6 +148,11 @@ Bitte einen vorhandenen Ordner auswählen!</value>
 
 Genieße deine ordentlich sortierte Musik. ;)</value>
   </data>
+  <data name="MessageFinalWithErrors" xml:space="preserve">
+    <value>Erfolgreich abgeschlossen, jedoch gab es Fehler.
+
+Genieße deine ordentlich sortierte Musik. ;)"</value>
+  </data>
   <data name="MessageLocalDrive" xml:space="preserve">
     <value>Lokales Laufwerk erkannt!
 Bitte die Applikation nur auf externe Laufwerke anwenden (USB, etc.).
@@ -169,11 +183,6 @@ Willst Du wirklich schließen?</value>
   </data>
   <data name="Processing" xml:space="preserve">
     <value>Verarbeite...</value>
-  </data>
-  <data name="MessageFinalWithErrors" xml:space="preserve">
-    <value>Erfolgreich abgeschlossen, jedoch gab es Fehler.
-
-Genieße deine ordentlich sortierte Musik. ;)"</value>
   </data>
   <data name="ProcessingFinished" xml:space="preserve">
     <value>Verarbeitung abgeschlossen.</value>
