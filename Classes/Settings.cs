@@ -24,6 +24,7 @@ namespace MusicSorter.Classes
         {
             Subfolders = true;
             SortFolders = true;
+            Simulate = false;
         }
 
         internal void Load()

@@ -88,11 +88,29 @@ namespace MusicSorter.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Done!.
+        /// </summary>
+        public static string Done {
+            get {
+                return ResourceManager.GetString("Done", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Select a folder or drop it here.
         /// </summary>
         public static string DropMessage {
             get {
                 return ResourceManager.GetString("DropMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to An Error occurred! :(.
+        /// </summary>
+        public static string Error {
+            get {
+                return ResourceManager.GetString("Error", resourceCulture);
             }
         }
         
@@ -133,6 +151,93 @@ namespace MusicSorter.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Directory:
+        ///&apos;{dir}&apos;
+        ///not found!
+        ///
+        ///Please select an existing folder!.
+        /// </summary>
+        public static string MessageDirectoryNotFound {
+            get {
+                return ResourceManager.GetString("MessageDirectoryNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Successfully finished.
+        ///
+        ///NJoy your proper sorted music. ;).
+        /// </summary>
+        public static string MessageFinal {
+            get {
+                return ResourceManager.GetString("MessageFinal", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Successfully finished, but there were errors.
+        ///
+        ///NJoy your proper sorted music. ;).
+        /// </summary>
+        public static string MessageFinalWithErrors {
+            get {
+                return ResourceManager.GetString("MessageFinalWithErrors", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Local Drive detected!
+        ///Please only use the application on removable drives (USB, etc.).
+        ///
+        ///Do you really want to continue at your own risk?.
+        /// </summary>
+        public static string MessageLocalDrive {
+            get {
+                return ResourceManager.GetString("MessageLocalDrive", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Processing Folder {foldersCount} &gt; File {filesCount}....
+        /// </summary>
+        public static string MessageProcessing {
+            get {
+                return ResourceManager.GetString("MessageProcessing", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Simulating Folder {foldersCount} &gt; File {filesCount}....
+        /// </summary>
+        public static string MessageSimulating {
+            get {
+                return ResourceManager.GetString("MessageSimulating", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Sorting folders....
+        /// </summary>
+        public static string MessageSortingFolders {
+            get {
+                return ResourceManager.GetString("MessageSortingFolders", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The application is still processing!
+        ///
+        ///Please wait for the application to finish the work, otherwise the folder structure can be damaged!
+        ///
+        ///Do you really want to quit?.
+        /// </summary>
+        public static string MessageStillProcess {
+            get {
+                return ResourceManager.GetString("MessageStillProcess", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Options.
         /// </summary>
         public static string Options {
@@ -147,6 +252,24 @@ namespace MusicSorter.Properties {
         public static string Path {
             get {
                 return ResourceManager.GetString("Path", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Processing....
+        /// </summary>
+        public static string Processing {
+            get {
+                return ResourceManager.GetString("Processing", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Processing finished..
+        /// </summary>
+        public static string ProcessingFinished {
+            get {
+                return ResourceManager.GetString("ProcessingFinished", resourceCulture);
             }
         }
         
@@ -285,6 +408,15 @@ namespace MusicSorter.Properties {
         public static string Title {
             get {
                 return ResourceManager.GetString("Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to WARNING!.
+        /// </summary>
+        public static string Warning {
+            get {
+                return ResourceManager.GetString("Warning", resourceCulture);
             }
         }
     }

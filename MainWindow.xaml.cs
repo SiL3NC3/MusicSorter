@@ -5,6 +5,7 @@ using MusicSorter.Helper;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
@@ -45,6 +46,7 @@ namespace MusicSorter
         private Structure _structure;
         private bool _dropEnabled = true;
         private bool _processing = false;
+        private bool _canceled = false;
 
         public MainWindow()
         {
@@ -52,6 +54,10 @@ namespace MusicSorter
             SetProductVersion();
 
             LabelStatus.Content = null;
+
+#if (!DEBUG)
+            CheckBoxOptionSimulate.Visibility = Visibility.Collapsed;
+#endif
 
             _settings = new Settings();
             _settings.Load();
@@ -67,6 +73,9 @@ namespace MusicSorter
         {
             var v = Assembly.GetExecutingAssembly().GetName().Version;
             this.Title += $" v{v.Major}.{v.Minor}";
+#if (DEBUG)
+            this.Title += " [DEBUG]";
+#endif
         }
         private void SetSortOrder(SortingOrder order, bool save = false)
         {
@@ -141,11 +150,14 @@ namespace MusicSorter
                     CheckBoxOptionSimulate.IsEnabled = true;
                     break;
                 case States.Select:
-                    BorderDropZone.Opacity = 0;
-                    GridInformation.Visibility = Visibility.Visible;
-                    ButtonSelect.IsEnabled = false;
-                    if (_settings.Path != null)
-                        ReadFolder();
+                    if (CheckPath())
+                    {
+                        BorderDropZone.Opacity = 0;
+                        GridInformation.Visibility = Visibility.Visible;
+                        ButtonSelect.IsEnabled = false;
+                        if (_settings.Path != null)
+                            ReadFolder();
+                    }
                     break;
                 case States.Reading:
                     ButtonStart.IsEnabled = false;
@@ -155,13 +167,24 @@ namespace MusicSorter
                     CheckBoxOptionSimulate.IsEnabled = false;
                     break;
                 case States.Idle:
-                    if (_structure != null && _structure.Files.Count == 0)
+                    if (!_canceled)
                     {
-                        SetStatus("No files found!");
+                        if (_structure.Files.Count == 0)
+                        {
+                            SetStatus("No files found!");
+                        }
+                        else
+                        {
+                            SetStatus();
+                        }
                     }
                     else
                     {
-                        SetStatus();
+                        _canceled = false;
+                        if (_structure.Folders.Count == 0)
+                        {
+                            Reset();
+                        }
                     }
                     ButtonSelect.IsEnabled = true;
                     CheckBoxOptionSubfolders.IsEnabled = true;
@@ -247,8 +270,8 @@ namespace MusicSorter
             }
             catch (DirectoryNotFoundException ex)
             {
-                var msg = $"Directory:{nl} '{ex.Message}'{nl}not found!{nl}{nl}Please select an existing folder!";
-                ShowMessage(msg, MessageBoxIcon.Error, "An Error occurred :(");
+                var msg = Properties.Resources.MessageDirectoryNotFound.Replace("{dir}", ex.Message);
+                ShowMessage(msg, MessageBoxIcon.Error, Properties.Resources.Error);
             }
             catch (Exception ex)
             {
@@ -266,23 +289,31 @@ namespace MusicSorter
             _processing = true;
             Console.WriteLine("Start processing...");
             SetState(States.Processing);
-            SetStatus("Processing...", true);
+            SetStatus(Properties.Resources.Processing, true);
 
             ProgressBarStatus.Maximum = _structure.Files.Count();
+
+            SimpleLogger.Instance.Info("Processing stared. Path: " + _settings.Path);
 
             var result = await _structure.Process();
 
             this.UpdateLayout();
 
-            SetStatus("Processing finished.", true);
+            SetStatus(Properties.Resources.ProcessingFinished, true);
 
             if (result.HasErrors)
             {
-
+                if (MessageBoxEx.Show(this, Properties.Resources.MessageFinalWithErrors,
+                       Properties.Resources.Done,
+                      MessageBoxButtons.YesNo,
+                       MessageBoxIcon.Warning) == System.Windows.Forms.DialogResult.Yes)
+                {
+                    Process.Start(SimpleLogger.Instance.LogFilename);
+                }
             }
             else
             {
-                ShowMessage($"Successfully finished.{nl}Njoy your proper sorted music. ;)", MessageBoxIcon.Information, "Done!");
+                ShowMessage(Properties.Resources.MessageFinal, MessageBoxIcon.Information, Properties.Resources.Done);
             }
             SetState(States.Init);
             _processing = false;
@@ -302,8 +333,11 @@ namespace MusicSorter
             //this.InvokeEx2(f => f.ShowMessage(msg));
 
         }
-        internal void ShowMessage(string message, MessageBoxIcon icon = System.Windows.Forms.MessageBoxIcon.Error, string title = "An Error occurred :(")
+        internal void ShowMessage(string message, MessageBoxIcon icon = System.Windows.Forms.MessageBoxIcon.Error, string title = null)
         {
+            if (title == null)
+                title = Properties.Resources.Error;
+
             MessageBoxEx.Show(this, message,
                        title,
                       MessageBoxButtons.OK,
@@ -423,13 +457,30 @@ namespace MusicSorter
             else { _dropEnabled = true; }
         }
 
+        private bool CheckPath()
+        {
+            var drive = FileSystemHelper.GetDrive(_settings.Path);
+            if (drive.DriveType != DriveType.Removable)
+            {
+                if (MessageBoxEx.Show(this, Properties.Resources.MessageLocalDrive,
+                    Properties.Resources.Warning, MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == System.Windows.Forms.DialogResult.No)
+                {
+
+                    return false;
+                }
+                else
+                {
+                    return true;
+                }
+            }
+            return true;
+        }
+
         private void BorderDropZone_DragEnter(object sender, System.Windows.DragEventArgs e)
         {
             _dropEnabled = true;
             if (e.Data.GetDataPresent(System.Windows.DataFormats.FileDrop))
             {
-
-
                 var path = ((string[])e.Data.GetData(System.Windows.DataFormats.FileDrop))[0];
                 if (!Directory.Exists(path))
                 {
@@ -498,11 +549,8 @@ namespace MusicSorter
         {
             if (_processing)
             {
-                if (MessageBoxEx.Show(this,
-                         $"Application is still processing!{nl}{nl}" +
-                         $"Please wait for the application to finish the work, otherwise the folder structure can be damaged!{nl}{nl}" +
-                         $"Do you really want to quit?",
-                         "WARNING!",
+                if (MessageBoxEx.Show(this, Properties.Resources.MessageStillProcess,
+                         Properties.Resources.Warning,
                          MessageBoxButtons.YesNo, MessageBoxIcon.Warning
                      ) == System.Windows.Forms.DialogResult.Yes)
                 {

@@ -106,8 +106,14 @@
   <data name="DescendingOrder" xml:space="preserve">
     <value>Absteigende Reihenfolge</value>
   </data>
+  <data name="Done" xml:space="preserve">
+    <value>Erledigt!</value>
+  </data>
   <data name="DropMessage" xml:space="preserve">
     <value>Ordner auswählen oder hier ablegen</value>
+  </data>
+  <data name="Error" xml:space="preserve">
+    <value>Upps ein Fehler! :(</value>
   </data>
   <data name="Files" xml:space="preserve">
     <value>Dateien:</value>
@@ -121,11 +127,56 @@
   <data name="Info" xml:space="preserve">
     <value>INFO</value>
   </data>
+  <data name="MessageDirectoryNotFound" xml:space="preserve">
+    <value>Ordner:
+'{dir}'
+nicht gefunden!
+
+Bitte einen vorhandenen Ordner auswählen!</value>
+  </data>
+  <data name="MessageFinal" xml:space="preserve">
+    <value>Erfolgreich abgeschlossen.
+
+Genieße deine ordentlich sortierte Musik. ;)</value>
+  </data>
+  <data name="MessageLocalDrive" xml:space="preserve">
+    <value>Lokales Laufwerk erkannt!
+Bitte die Applikation nur auf externe Laufwerke anwenden (USB, etc.).
+
+Willst Du wirklich auf eigene Gefahr weitermachen?</value>
+  </data>
+  <data name="MessageProcessing" xml:space="preserve">
+    <value>Verarbeite Ordner {foldersCount} &gt; Datei {filesCount}...</value>
+  </data>
+  <data name="MessageSimulating" xml:space="preserve">
+    <value>Simuliere Ordner {foldersCount} &gt; Datei {filesCount}...</value>
+  </data>
+  <data name="MessageSortingFolders" xml:space="preserve">
+    <value>Sortiere Ordner...</value>
+  </data>
+  <data name="MessageStillProcess" xml:space="preserve">
+    <value>Das Programm arbeitet noch!
+
+Bitte warten bis das Programm zu Ende gearbeitet hat, andererseits kann die Datenstruktur beschädigt werden!
+
+Willst Du wirklich schließen?</value>
+  </data>
   <data name="Options" xml:space="preserve">
     <value>Optionen</value>
   </data>
   <data name="Path" xml:space="preserve">
     <value>Pfad:</value>
+  </data>
+  <data name="Processing" xml:space="preserve">
+    <value>Verarbeite...</value>
+  </data>
+  <data name="MessageFinalWithErrors" xml:space="preserve">
+    <value>Erfolgreich abgeschlossen, jedoch gab es Fehler.
+
+Genieße deine ordentlich sortierte Musik. ;)"</value>
+  </data>
+  <data name="ProcessingFinished" xml:space="preserve">
+    <value>Verarbeitung abgeschlossen.</value>
   </data>
   <data name="RandomOrder" xml:space="preserve">
     <value>Zufällige Reihenfolge</value>
@@ -162,5 +213,8 @@
   </data>
   <data name="Title" xml:space="preserve">
     <value>Musik Sortierer</value>
+  </data>
+  <data name="Warning" xml:space="preserve">
+    <value>ACHTUNG!</value>
   </data>
 </root>

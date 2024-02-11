@@ -53,11 +53,11 @@
 
         <!--OPTIONS-->
         <GroupBox x:Name="GroupBoxOptions" Grid.Row="1" Header="{x:Static p:Resources.Options}" Margin="4">
-            <UniformGrid VerticalAlignment="Center" Columns="3" Margin="4">
-                <CheckBox x:Name="CheckBoxOptionSubfolders" HorizontalAlignment="Center" Click="CheckBoxOptionSubfolders_Click" Content="{x:Static p:Resources.Subfolder}"/>
-                <CheckBox x:Name="CheckBoxOptionSortFolders" HorizontalAlignment="Center" Click="CheckBoxOptionSortFolders_Click" Content="{x:Static p:Resources.SortFolders}"/>
-                <CheckBox x:Name="CheckBoxOptionSimulate" HorizontalAlignment="Center" Click="CheckBoxOptionSimulate_Click" Content="{x:Static p:Resources.Simulate}"/>
-            </UniformGrid>
+            <StackPanel VerticalAlignment="Center" Orientation="Horizontal" HorizontalAlignment="Center" Margin="4">
+                <CheckBox Margin="0 0 16 0 " x:Name="CheckBoxOptionSubfolders" HorizontalAlignment="Center" Click="CheckBoxOptionSubfolders_Click" Content="{x:Static p:Resources.Subfolder}"/>
+                <CheckBox Margin="0 0 16 0 " x:Name="CheckBoxOptionSortFolders" HorizontalAlignment="Center" Click="CheckBoxOptionSortFolders_Click" Content="{x:Static p:Resources.SortFolders}"/>
+                <CheckBox Margin="0 0 16 0 " x:Name="CheckBoxOptionSimulate" HorizontalAlignment="Center" Click="CheckBoxOptionSimulate_Click" Content="{x:Static p:Resources.Simulate}"/>
+            </StackPanel>
         </GroupBox>
 
         <!--INFORMATION / Folder Selection-->

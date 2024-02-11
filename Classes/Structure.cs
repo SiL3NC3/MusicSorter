@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -127,6 +128,7 @@ namespace MusicSorter.Classes
             string tempFile = null;
             StringBuilder cmd = new StringBuilder();
             string cmdFile = null;
+            string msg = null;
 
             var task = new Task(() =>
             {
@@ -181,13 +183,20 @@ namespace MusicSorter.Classes
                             try { File.SetAttributes(file.FullName, FileAttributes.Normal); }
                             catch (Exception) { }
                         }
+                        try
+                        {
+                            tempFile = tmpFolder + file.Name;
+                            File.Move(file.FullName, tempFile);
 
-                        tempFile = tmpFolder + file.Name;
-                        File.Move(file.FullName, tempFile);
+                            // Prepare undo batch file
+                            cmd.Append($"mv {file.Name} {file.DirectoryName}{Environment.NewLine}");
+                        }
 
-                        // Prepare undo batch file
-                        cmd.Append($"mv {file.Name} {file.DirectoryName}{Environment.NewLine}");
-
+                        catch (Exception ex)
+                        {
+                            result.Errors.Add(new Error(ex));
+                            SimpleLogger.Instance.Error(ex.Message);
+                        }
                     }
 
                     // After copying files to temp,
@@ -198,48 +207,86 @@ namespace MusicSorter.Classes
 
                     foreach (var file in files)
                     {
-                        filesCount++;
+                        try
+                        {
+                            filesCount++;
 
-                        tempFile = tmpFolder + file.Name;
-                        File.Move(tempFile, file.FullName);
-                        Console.WriteLine($" - File: {file} moved.");
-                        if (File.Exists(cmdFile))
-                            File.Delete(cmdFile);
-                        Thread.Sleep(8);
-                        OnProgressChanged(new ProcessingEventArgs($"Processing Folder {foldersCount} > File {filesCount}...", filesCount, file, dir));
+                            tempFile = tmpFolder + file.Name;
+                            File.Move(tempFile, file.FullName);
+                            Console.WriteLine($" - File: {file} moved.");
+                            if (File.Exists(cmdFile))
+                                File.Delete(cmdFile);
+                            Thread.Sleep(8);
+                            msg = Properties.Resources.MessageProcessing.Replace("{foldersCount}", foldersCount.ToString()).Replace("{filesCount}", filesCount.ToString());
+                            OnProgressChanged(new ProcessingEventArgs(msg, filesCount, file, dir));
+                        }
+                        catch (Exception ex)
+                        {
+                            result.Errors.Add(new Error(ex));
+                            SimpleLogger.Instance.Error(ex.Message);
+                        }
                     }
-
                 }
 
-                OnProgressChanged(new ProcessingEventArgs($"Sorting folders..."));
+                OnProgressChanged(new ProcessingEventArgs(Properties.Resources.MessageSortingFolders));
 
                 Thread.Sleep(10);
 
-                // Move folders if set
+                // SORT FOLDERS
                 if (Settings.SortFolders)
                 {
                     Console.WriteLine("Sorting Folders...");
+
+                    DateTime now = DateTime.Now;
+                    int count = folders.Count;
+
                     foreach (var dir in folders)
                     {
+                        var date = now.AddMinutes(-count);
                         // Check for root path avoid recreation
                         if (!dir.FullName.Equals(driveInfo.Name))
                         {
-                            // Recreate folder when not empty
-                            var tempTarget = tmpFolder + dir.Name;
-                            Directory.Move(dir.FullName, tempTarget);
-                            Directory.Move(tempTarget, dir.FullName);
-                            Console.WriteLine(dir + " recreated (sorted).");
+                            try
+                            {
+                                // Recreate folder when not empty
+                                var tempTarget = tmpFolder + dir.Name;
+                                Directory.Move(dir.FullName, tempTarget);
+                                Directory.Move(tempTarget, dir.FullName);
+
+                                //Directory.CreateDirectory(dir.FullName);
+
+                                //var tmpFiles = dir.EnumerateFiles();
+                                //foreach (var file in tmpFiles)
+                                //{
+                                //    string destFile = Path.Combine(dir.FullName, Path.GetFileName(file.FullName));
+
+                                //    if (!File.Exists(destFile))
+                                //        File.Move(file.FullName, destFile);
+                                //}
+
+                                Console.WriteLine(dir + " recreated (sorted).");
+                            }
+                            catch (Exception ex)
+                            {
+                                result.Errors.Add(new Error(ex));
+                                SimpleLogger.Instance.Error(ex.Message);
+                            }
                         }
+                        count--;
                     }
                 }
 
                 // Finally delete tmpfolder
                 Directory.Delete(tmpFolder, true);
+
             });
             task.Start();
             await task;
             Thread.Sleep(10);
             return result;
+        }
+        private void SortFolders()
+        {
         }
         private async Task<ProcessingResult> Simulate()
         {
@@ -249,6 +296,7 @@ namespace MusicSorter.Classes
             int foldersCount = 0;
             List<FileInfo> files = null;
             List<DirectoryInfo> folders = null;
+            string msg = null;
 
             var task = new Task(() =>
             {
@@ -291,7 +339,8 @@ namespace MusicSorter.Classes
 
                             Console.WriteLine($"Simulating file: {file}");
                             Thread.Sleep(8);
-                            OnProgressChanged(new ProcessingEventArgs($"Simulating Folder {foldersCount} > File {filesCount}...", filesCount, file, dir));
+                            msg = Properties.Resources.MessageSimulating.Replace("{foldersCount}", foldersCount.ToString()).Replace("{filesCount}", filesCount.ToString());
+                            OnProgressChanged(new ProcessingEventArgs(msg, filesCount, file, dir));
                         }
                     }
                 }

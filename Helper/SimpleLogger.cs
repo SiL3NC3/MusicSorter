@@ -47,7 +47,7 @@ public class SimpleLogger
     private const string FILE_EXT = ".log";
     private readonly object fileLock = new object();
     private readonly string datetimeFormat;
-    private readonly string logFilename;
+    public readonly string LogFilename;
 
     /// <summary>
     /// Initiate an instance of SimpleLogger class constructor.
@@ -56,11 +56,11 @@ public class SimpleLogger
     public SimpleLogger()
     {
         datetimeFormat = "yyyy-MM-dd HH:mm:ss.fff";
-        logFilename = System.Reflection.Assembly.GetExecutingAssembly().GetName().Name + FILE_EXT;
+        LogFilename = System.Reflection.Assembly.GetExecutingAssembly().GetName().Name + FILE_EXT;
 
         // Log file header line
-        string logHeader = logFilename + " is created.";
-        if (!System.IO.File.Exists(logFilename))
+        string logHeader = LogFilename + " is created.";
+        if (!System.IO.File.Exists(LogFilename))
         {
             WriteLine(System.DateTime.Now.ToString(datetimeFormat) + " " + logHeader);
         }
@@ -139,7 +139,7 @@ public class SimpleLogger
             }
             lock (fileLock)
             {
-                using (System.IO.StreamWriter writer = new System.IO.StreamWriter(logFilename, append, System.Text.Encoding.UTF8))
+                using (System.IO.StreamWriter writer = new System.IO.StreamWriter(LogFilename, append, System.Text.Encoding.UTF8))
                 {
                     writer.WriteLine(text);
                 }
