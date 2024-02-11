@@ -25,7 +25,7 @@
             <StackPanel Orientation="Vertical" Margin="0 8 0 0">
                 <TextBlock Text="{x:Static p:Resources.AboutLinkText}" HorizontalAlignment="Center"/>
                 <TextBlock HorizontalAlignment="Center">
-                <Hyperlink NavigateUri="https://speechcentral.net/">
+                <Hyperlink NavigateUri="https://github.com/SiL3NC3/MusicSorter/">
                     <Hyperlink.Inlines>
                         <Run Text="GitHub.com"/>
                     </Hyperlink.Inlines>
